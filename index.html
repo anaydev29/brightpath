@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/4/41/Placeholder_view_vector.svg">
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/4/41/Placeholder_view_vector.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#020617">
+  <title>BrightPath — Welcome</title>
+  <meta name="description" content="Join BrightPath to track your mental health, log moods, and interact securely with the community.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      --text-main: #102027;
+      --glass-bg: rgba(255, 255, 255, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.3);
+      --btn-radius: 12px;
+    }
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #ffb74d, #b39ddb);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .landing-container {
+      display: flex;
+      width: 90%;
+      max-width: 1000px;
+      height: 600px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .hero-section {
+      flex: 1.2;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(255,255,255,0.1);
+      border-right: 1px solid var(--glass-border);
+    }
+    .hero-title {
+      font-size: 68px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      color: #fff;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      letter-spacing: -1px;
+    }
+    .hero-subtitle {
+      font-size: 22px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
+      margin-bottom: 40px;
+      line-height: 1.6;
+      max-width: 90%;
+    }
+    .auth-section {
+      flex: 1;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-box {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .auth-box.active { display: block; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+    h2 { margin-top: 0; font-size: 32px; font-weight: 700; margin-bottom: 32px; }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      font-family: inherit;
+      font-size: 16px;
+      padding: 14px 16px;
+      border-radius: var(--btn-radius);
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.4);
+      outline: none;
+      transition: all 0.3s;
+    }
+    input:focus {
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: #102027;
+      color: #fff;
+      border: none;
+      border-radius: var(--btn-radius);
+      font-weight: 700;
+      font-size: 16px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover {
+      background: #2b4553;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .switch-link {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .switch-link:hover { opacity: 1; text-decoration: underline; }
+    .error-msg {
+      color: #d32f2f;
+      font-size: 14px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="landing-container">
+    <div class="hero-section" style="position: relative; overflow: hidden;">
+      <div style="display:inline-flex; align-items:center; gap:12px; padding: 12px 24px; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); border-radius: 30px; margin-bottom: 36px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); width: fit-content;">
+        <i class="ph-fill ph-plant" style="font-size: 32px; color: #fff;"></i>
+        <span style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: 0.5px;">BrightPath</span>
+      </div>
+      
+      <div class="hero-title">Your mind,<br>made clearer.</div>
+      <div class="hero-subtitle">Track your moods, build beautiful habits, and find peace with voice-guided meditations—all in one place.</div>
+      
+      <div style="position:absolute; bottom: -40px; right: -40px; font-size: 240px; color: rgba(255,255,255,0.06); pointer-events:none;"><i class="ph-fill ph-sparkle"></i></div>
+    </div>
+    
+    <div class="auth-section">
+      <!-- LOGIN -->
+      <div class="auth-box active" id="loginBox">
+        <h2>Welcome back</h2>
+        <div class="error-msg" id="loginError"></div>
+        <form id="loginForm">
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" required placeholder="you@example.com">
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+        <div class="switch-link" onclick="toggleAuth('register')">Don't have an account? Sign up</div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-box" id="registerBox">
+        <h2>Create account</h2>
+        <div class="error-msg" id="regError"></div>
+        <form id="registerForm">
+          <div class="input-group">
+            <label>Name</label>
+            <input type="text" id="regName" required placeholder="Jane Doe">
+          </div>
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="regEmail" required placeholder="you@example.com">
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+        <div class="switch-link" onclick="toggleAuth('login')">Already have an account? Sign in</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; bottom: 32px; color: rgba(255,255,255,0.85); font-size: 15px; font-weight: 500; letter-spacing: 0.5px; z-index: 10; display: flex; align-items: center; justify-content: center; width: 100%;">
+    Built with <i class="ph-fill ph-heart" style="color: #ff6b6b; margin: 0 6px; font-size: 18px;"></i> by Anay Shivhare
+  </div>
+
+  <script>
+    function toggleAuth(type) {
+      document.getElementById('loginBox').classList.remove('active');
+      document.getElementById('registerBox').classList.remove('active');
+      if (type === 'login') document.getElementById('loginBox').classList.add('active');
+      else document.getElementById('registerBox').classList.add('active');
+    }
+
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/api/auth' : 'https://your-production-backend.com/api/auth'; // CHANGE THIS BEFORE DEPLOYMENT
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errEl = document.getElementById('loginError');
+      errEl.style.display = 'none';
+
+      try {
+        const res = await fetch(`${API_URL}/login`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.msg || 'Login failed');
+        
+        localStorage.setItem('bp_token', data.token);
+        localStorage.setItem('bp_username', data.user.name);
+        window.location.href = 'app.html';
+      } catch (err) {
+        errEl.innerText = err.message;
+        errEl.style.display = 'block';
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const errEl = document.getElementById('regError');
+      errEl.style.display = 'none';
+
+      try {
+        const res = await fetch(`${API_URL}/register`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.msg || 'Registration failed');
+        
+        localStorage.setItem('bp_token', data.token);
+        localStorage.setItem('bp_username', data.user.name);
+        window.location.href = 'app.html';
+      } catch (err) {
+        errEl.innerText = err.message;
+        errEl.style.display = 'block';
+      }
+    });
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').catch(err => console.log('SW registration failed: ', err));
+      });
+    }
+  </script>
+</body>
+</html>

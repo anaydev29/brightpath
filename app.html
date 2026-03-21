@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/4/41/Placeholder_view_vector.svg">
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/4/41/Placeholder_view_vector.svg">
+  <meta name="theme-color" content="#020617">
+  <title>BrightPath — Student Wellness App</title>
+  <meta name="description" content="BrightPath is your gamified companion for daily wellness and mental health tracking.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+
+
+  <canvas id="confettiCanvas" aria-hidden="true"
+ style="position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:998"></canvas>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo-area">
+        <i class="ph-fill ph-plant" style="color: #fff"></i>
+        <span class="logo-text">BrightPath</span>
+      </div>
+      <nav class="nav" id="nav">
+        <button data-page="dashboard" class="active"><i class="ph ph-house"></i><span class="nav-text">Dashboard</span></button>
+        <button data-page="analytics"><i class="ph ph-chart-line-up"></i><span class="nav-text">Analytics</span></button>
+        <button data-page="journal"><i class="ph ph-book-open-text"></i><span class="nav-text">Journal</span></button>
+        <button data-page="breathing"><i class="ph ph-wind"></i><span class="nav-text">Breath</span></button>
+        <button data-page="meditation"><i class="ph ph-flower-lotus"></i><span class="nav-text">Meditate</span></button>
+        <button data-page="habits"><i class="ph ph-check-circle"></i><span class="nav-text">Habits</span></button>
+        <button data-page="achievements"><i class="ph ph-medal"></i><span class="nav-text">Badges</span></button>
+        <button data-page="community"><i class="ph ph-users"></i><span class="nav-text">Community</span></button>
+
+        <button data-page="settings"><i class="ph ph-gear"></i><span class="nav-text">Profile</span></button>
+        <div style="flex-grow:1;"></div>
+        <button id="logoutBtn" style="color:#ff6b6b; margin-top:24px"><i class="ph ph-sign-out"></i><span class="nav-text" style="font-weight:700">Log Out</span></button>
+      </nav>
+    </aside>
+
+    <main class="page-wrap">
+      <div class="topbar">
+        <div class="title" id="appTitle">BrightPath — Wellness</div>
+        <div style="color:rgba(255,255,255,0.9)" id="welcomeSmall">Local & private</div>
+      </div>
+
+      <div id="pageContainer">
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
+          <div class="content card">
+            <div class="grid">
+              <div>
+                <div class="stat-grid">
+                  <div class="stat">Today's mood<br/><div id="todayMoodLarge" style="font-size:28px;margin-top:8px">—</div></div>
+                  <div class="stat">Streak<br/><div id="streakCount" style="font-size:20px;margin-top:8px">0</div></div>
+                  <div class="stat">Positive Streak<br/><div id="posStreak" style="font-size:20px;margin-top:8px">0</div></div>
+                </div>
+
+                <div style="margin-top:12px" class="card">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <strong>Quick Mood</strong><div class="small">Tap to save</div>
+                  </div>
+                  <div id="quickEmoji" style="font-size:28px;margin-top:8px;display:flex;gap:10px">
+                    <span class="qm" data-emo="🤩" role="button" tabindex="0" aria-label="Mood: Great">🤩</span>
+                    <span class="qm" data-emo="😊" role="button" tabindex="0" aria-label="Mood: Good">😊</span>
+                    <span class="qm" data-emo="🙂" role="button" tabindex="0" aria-label="Mood: Okay">🙂</span>
+                    <span class="qm" data-emo="😐">😐</span>
+                    <span class="qm" data-emo="😔" role="button" tabindex="0" aria-label="Mood: Sad">😔</span>
+                    <span class="qm" data-emo="😣" role="button" tabindex="0" aria-label="Mood: Stressed">😣</span>
+                    <span class="qm" data-emo="😡" role="button" tabindex="0" aria-label="Mood: Angry">😡</span>
+                    <span class="qm" data-emo="😴">😴</span>
+                    <span class="qm" data-emo="😇">😇</span>
+                    <span class="qm" data-emo="🤯">🤯</span>
+                  </div>
+                </div>
+
+                <div style="margin-top:12px" class="card">
+                  <strong>Quick Actions</strong>
+                  <div class="controls" style="margin-top:8px">
+                    <button class="btn" id="gotoJournal">New Journal</button>
+                    <button class="btn" id="gotoBreath">Start Breathing</button>
+                    <button class="btn" id="gotoAnalytics">View Analytics</button>
+                  </div>
+                </div>
+              </div>
+
+              <aside>
+                <div class="card">
+                  <strong>Achievements</strong>
+                  <div id="dashBadges" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"></div>
+                </div>
+
+                <div class="card" style="margin-top:12px">
+                  <strong>Wellness Score</strong>
+                  <div id="wellnessScore" style="font-size:28px;margin-top:8px">—</div>
+                </div>
+
+                <div class="card" style="margin-top:12px">
+                  <strong>Level & Points</strong>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                    <div id="userLevel" style="font-size:20px;font-weight:700">Level 1</div>
+                    <div class="points-badge" id="userPoints">0 pts</div>
+                  </div>
+                  <div class="level-progress">
+                    <div class="level-bar" id="levelBar" style="width:0%"></div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section id="analytics" class="page">
+          <div class="content card">
+            <h3>Mood Over Time</h3>
+            <canvas id="moodChart" aria-label="Mood Chart History" role="img" width="800" height="240"></canvas>
+            <h3 style="margin-top:24px">Mood Breakdown</h3>
+            <div id="interactiveMoodStats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:12px;margin-top:12px"></div>
+            <div style="margin-top:24px" class="card">
+              <strong>Weekly Wellness</strong>
+              <div id="weeklyText" style="margin-top:8px;font-size:20px;font-weight:600">—</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- JOURNAL -->
+        <section id="journal" class="page">
+          <div class="content card">
+            <h3>Journal</h3>
+            <textarea id="journalInput" placeholder="Write something about your day..."></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" id="saveEntry">Add Entry</button>
+              <button class="btn" id="clearJournal">Clear All</button>
+            </div>
+            <div id="entriesWrap" style="margin-top:12px"></div>
+          </div>
+        </section>
+
+        <!-- BREATHING -->
+        <section id="breathing" class="page">
+          <div class="content card">
+            <h3>Breathing (voice-guided available)</h3>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+              <div id="breathCircle" class="breath-orb">Breathe</div>
+              <div id="breathText" style="opacity:0.9">Press Start</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn" id="startBreath">Start</button>
+                <button class="btn" id="stopBreath">Stop</button>
+              </div>
+              <label><input type="checkbox" id="voiceGuide" /> Enable voice-guided breathing</label>
+            </div>
+          </div>
+        </section>
+
+        <!-- MEDITATION -->
+        <section id="meditation" class="page">
+          <div class="content card">
+            <h3>Guided Meditations</h3>
+            <div id="meditationLibrary"></div>
+          </div>
+        </section>
+
+        <!-- HABITS -->
+        <section id="habits" class="page">
+          <div class="content card">
+            <h3>Habit Tracker</h3>
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+              <input type="text" id="newHabitInput" placeholder="New habit name..." style="flex:1;padding:8px;border-radius:8px;border:none" />
+              <button class="btn" id="addHabitBtn">Add Habit</button>
+            </div>
+            <div id="habitsContainer"></div>
+          </div>
+        </section>
+
+        <!-- ACHIEVEMENTS -->
+        <section id="achievements" class="page">
+          <div class="content card">
+            <h3>Achievements & Challenges</h3>
+            <div class="card" style="margin-bottom:12px">
+              <strong>Current Challenge</strong>
+              <div id="currentChallenge" style="margin-top:8px"></div>
+            </div>
+            <h4 style="margin-top:16px">Your Badges</h4>
+            <div id="achieveGrid" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
+          </div>
+        </section>
+
+        <!-- COMMUNITY -->
+        <section id="community" class="page">
+          <div class="content card">
+            <h3>Community Support</h3>
+            <div class="card" style="margin-bottom:12px">
+              <strong>Daily Quote</strong>
+              <div id="dailyQuote" style="margin-top:8px;font-style:italic"></div>
+            </div>
+            <div class="card">
+              <strong>Share Your Win (Anonymous)</strong>
+              <textarea id="communityPost" placeholder="Share something positive..." style="width:100%;min-height:60px;padding:8px;border-radius:8px;border:none;margin-top:8px"></textarea>
+              <button class="btn" id="sharePostBtn" style="margin-top:8px">Share Anonymously</button>
+            </div>
+            <h4 style="margin-top:16px">Recent Community Wins</h4>
+            <div id="communityFeed"></div>
+          </div>
+        </section>
+
+        <!-- SETTINGS / PROFILE -->
+        <section id="settings" class="page">
+          <div class="content card">
+            <h3 style="font-size:28px; margin-bottom: 20px;">Profile</h3>
+            
+            <!-- NEW PROFILE HEADER -->
+            <div style="display:flex; align-items:center; gap:24px; margin-bottom: 32px; padding: 24px; background: rgba(255,255,255,0.15); border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+              <div class="avatar-preview" id="avatarPreview" style="font-size: 72px; border: none; background: transparent; padding: 0; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));">😊</div>
+              <div style="flex: 1;">
+                <label style="font-weight:700; font-size: 14px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">Your Name</label>
+                <div style="display:flex; gap:12px; margin-top: 8px;">
+                  <input type="text" id="userNameInput" placeholder="Enter your name" style="flex:1; padding:14px 18px; border-radius:16px; border: 1px solid var(--glass-border); background: var(--glass-bg); font-weight:700; font-size: 20px; font-family: inherit; color: var(--text-main);" />
+                  <button class="btn" id="saveName" style="padding: 0 24px; font-weight: 700;">Save</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- AVATAR SELECTION GRID -->
+            <div style="margin-bottom: 32px;">
+              <strong style="font-size: 18px;">Choose Avatar</strong>
+              <div style="display:flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;">
+                <style>
+                  .ava-btn { background: var(--glass-bg); border: 2px solid var(--glass-border); border-radius: 50%; width: 64px; height: 64px; font-size: 32px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);}
+                  .ava-btn:hover { transform: translateY(-4px) scale(1.1); background: rgba(255,255,255,0.5); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: rgba(255,255,255,0.8); }
+                </style>
+                <div class="ava-btn" onclick="setMemoji('😊')">😊</div>
+                <div class="ava-btn" onclick="setMemoji('😎')">😎</div>
+                <div class="ava-btn" onclick="setMemoji('🤩')">🤩</div>
+                <div class="ava-btn" onclick="setMemoji('🧑‍💻')">🧑‍💻</div>
+                <div class="ava-btn" onclick="setMemoji('🦸‍♀️')">🦸‍♀️</div>
+                <div class="ava-btn" onclick="setMemoji('🥷')">🥷</div>
+                <div class="ava-btn" onclick="setMemoji('🧚')">🧚</div>
+                <div class="ava-btn" onclick="setMemoji('🧜‍♂️')">🧜‍♂️</div>
+                <!-- Hidden old select to keep JS compatibility -->
+                <select id="emojiAvatar" style="display:none;">
+                   <option value="😊">😊</option><option value="😎">😎</option><option value="🤩">🤩</option>
+                   <option value="🧑‍💻">🧑‍💻</option><option value="🦸‍♀️">🦸‍♀️</option><option value="🥷">🥷</option>
+                   <option value="🧚">🧚</option><option value="🧜‍♂️">🧜‍♂️</option>
+                </select>
+                <button class="btn" id="saveEmojiAvatar" style="display:none;">Save</button>
+                <script>
+                  function setMemoji(emo) {
+                    document.getElementById('emojiAvatar').value = emo;
+                    document.getElementById('saveEmojiAvatar').click();
+                  }
+                </script>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:24px">
+              
+              <div>
+                <strong style="font-size: 18px;">App Theme</strong>
+                <div class="theme-selector" style="margin-top: 16px;">
+                  <div class="theme-option" data-theme="light" style="background:linear-gradient(135deg,#89cff0,#b39ddb)">
+                    <div style="font-size: 24px;">☀️</div>
+                    <div style="font-size:14px;margin-top:4px;font-weight:600">Light</div>
+                  </div>
+                  <div class="theme-option" data-theme="dark" style="background:linear-gradient(135deg,#0f172a,#020617)">
+                    <div style="font-size: 24px;">🌙</div>
+                    <div style="font-size:14px;margin-top:4px;font-weight:600">Dark</div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <strong style="font-size: 18px;">Assistant Voice</strong>
+                <div style="display:flex; gap:12px; margin-top:12px;">
+                  <select id="voiceSelect" aria-label="Select Voice" style="flex:1; padding:12px; border-radius:12px; border:1px solid var(--glass-border); background:rgba(255,255,255,0.4); font-family: inherit; font-size:16px; outline:none;"></select>
+                  <button class="btn" id="testVoice" style="padding: 0 24px;">Test</button>
+                </div>
+              </div>
+
+              <div class="settings-grid">
+                <div class="card" style="padding:20px; border-radius:24px;">
+                  <strong style="font-size: 16px;">Data Tools</strong><br/>
+                  <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+                     <button class="btn" id="exportBtn">Export Data</button>
+                     <button class="btn" id="exportPdfBtn" style="background:#c77dff;color:#fff;">Download PDF Report</button>
+                     <input type="file" id="importFile" aria-label="Import Data" style="font-size: 12px;"/>
+                  </div>
+                </div>
+                <div class="card" style="padding:20px; border-radius:24px;">
+                  <strong style="font-size: 16px;">Daily Reminder</strong><br/>
+                  <div style="margin-top:12px; display:flex; gap:8px;">
+                    <input type="time" id="dailyTime" aria-label="Daily Reminder Time" style="padding:12px; border-radius:12px; border:1px solid var(--glass-border); background:rgba(255,255,255,0.4); font-family: inherit; font-size:16px; outline:none;"/>
+                    <button class="btn" id="saveDaily">Save</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="padding:20px; border-radius:24px;">
+                <strong style="font-size: 16px;">Accessibility & Voice Mode</strong><br/>
+                <div style="margin-top:16px; display:flex; flex-direction:column; gap:16px;">
+                  <label style="display:flex; align-items:center; gap:12px; cursor:pointer;"><input type="checkbox" id="voiceAssistantToggle" style="width:20px;height:20px;"/> Enable AI Wellness Companion (Popups & Voice)</label>
+                  <label style="display:flex; align-items:center; gap:12px; cursor:pointer;"><input type="checkbox" id="voiceOnSave" style="width:20px;height:20px;"/> Voice feedback on mood save</label>
+                  <label style="display:flex; align-items:center; gap:12px; cursor:pointer;"><input type="checkbox" id="meditationToggle" style="width:20px;height:20px;"/> Enable Meditation Voice Mode</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div id="modalOverlay">
+    <div class="modal" id="modal">
+      <h3 id="modalTitle">Title</h3>
+      <div id="modalBody"></div>
+      <div id="modalActions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').catch(err => console.log('SW registration failed: ', err));
+      });
+    }
+  </script>
+</body>
+</html>

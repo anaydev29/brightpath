@@ -1,0 +1,15 @@
+{
+  "name": "BrightPath Wellness",
+  "short_name": "BrightPath",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#a1c4fd",
+  "theme_color": "#102027",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

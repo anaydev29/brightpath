@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>BrightPath Admin Command Center</title>
+  <meta name="description" content="BrightPath Admin Panel for metrics and community moderation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+<div class="admin-container">
+  
+  <div id="loginSection" class="login-box card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 32px; padding: 40px;">
+    <div style="font-size: 64px; margin-bottom: 16px; color:#6be4ff; filter: drop-shadow(0 0 20px rgba(107,228,255,0.4));"><i class="ph-fill ph-shield-check"></i></div>
+    <h2 style="font-size: 32px; margin-bottom: 8px;">Admin Interface</h2>
+    <p style="opacity: 0.6; font-size: 16px; margin-bottom: 32px;">Enter master passkey to unlock.</p>
+    <input type="password" id="passkeyInput" placeholder="Passkey" style="width:100%; padding:16px 20px; border-radius:16px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.4); color:white; font-size:18px; margin-bottom: 20px; outline:none; font-family: inherit; font-weight:600; text-align:center;" />
+    <button class="btn" id="loginBtn" style="width:100%; padding:16px; font-size:18px; background: #6be4ff; color: #020617; font-weight: 800; border:none; border-radius:16px;">Authenticate</button>
+    <div id="loginErr" style="color: #ff4757; margin-top: 16px; display: none; font-weight:600;">Secure connection failed. Invalid Passkey.</div>
+  </div>
+
+  <div id="dashSection" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <h2 style="font-size:32px; margin:0; display:flex; align-items:center; gap: 12px;"><i class="ph-fill ph-shield-check" style="color:#6be4ff;"></i> Command Center</h2>
+      <button class="btn" onclick="logout()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#fff; padding: 10px 24px;">Lock System</button>
+    </div>
+
+    <div style="display:flex; gap: 24px; margin-bottom: 48px; flex-wrap:wrap;">
+      <div class="stat-card" style="min-width: 200px;">
+        <div style="opacity:0.7; text-transform:uppercase; font-size:16px; font-weight:800; letter-spacing:1px; margin-bottom: 12px;">Total Users Registered</div>
+        <div class="stat-number" id="totalUsersStr" style="font-size: 64px; font-weight: 900; color: #6be4ff; text-shadow: 0 4px 20px rgba(107, 228, 255, 0.4);">0</div>
+      </div>
+      <div class="stat-card" style="min-width: 200px;">
+        <div style="opacity:0.7; text-transform:uppercase; font-size:16px; font-weight:800; letter-spacing:1px; margin-bottom: 12px;">Active Community Posts</div>
+        <div class="stat-number" id="totalPostsStr" style="font-size: 64px; font-weight: 900; color: #6be4ff; text-shadow: 0 4px 20px rgba(107, 228, 255, 0.4);">0</div>
+      </div>
+    </div>
+
+    <h3 style="font-size: 24px; margin-bottom: 20px;"><i class="ph-fill ph-users"></i> Live Community Moderation</h3>
+    <div id="postsContainer"></div>
+  </div>
+
+</div>
+
+<script>
+  let adminToken = sessionStorage.getItem('admin_token') || '';
+
+  if (adminToken) {
+    loadDashboard();
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const btn = document.getElementById('loginBtn');
+    btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Authenticating...';
+    adminToken = document.getElementById('passkeyInput').value;
+    setTimeout(loadDashboard, 800);
+  });
+
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : 'https://your-production-backend.com'; // CHANGE THIS BEFORE DEPLOYMENT
+
+  async function loadDashboard() {
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/stats`, {
+        headers: { 'x-admin-token': adminToken }
+      });
+      if (!res.ok) throw new Error('Invalid');
+      
+      const data = await res.json();
+      sessionStorage.setItem('admin_token', adminToken);
+      
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('dashSection').classList.remove('hidden');
+      
+      document.getElementById('totalUsersStr').innerText = data.totalUsers;
+      document.getElementById('totalPostsStr').innerText = data.totalPosts;
+
+      renderPosts(data.posts);
+      
+    } catch(e) {
+      document.getElementById('loginBtn').innerText = 'Authenticate';
+      document.getElementById('loginErr').style.display = 'block';
+      sessionStorage.removeItem('admin_token');
+    }
+  }
+
+  function renderPosts(posts) {
+    const container = document.getElementById('postsContainer');
+    container.innerHTML = '';
+    if(posts.length === 0) {
+      container.innerHTML = '<p style="opacity:0.5; padding:40px; text-align:center; font-size:18px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px;">Everything is quiet. No posts globally.</p>';
+      return;
+    }
+    
+    posts.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'post-item';
+      div.style.cssText = 'background: rgba(255,255,255,0.05); padding: 20px 24px; border-radius: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; border: 1px solid rgba(255,255,255,0.1);';
+      
+      const content = document.createElement('div');
+      const d = new Date(p.timestamp).toLocaleString();
+      content.innerHTML = `<span style="font-size:24px; margin-right:8px;">${p.avatar}</span> <strong style="font-size:20px;">${p.username}</strong> <span style="opacity:0.4; font-size:14px; margin-left:12px;">${d}</span><br><div style="margin-top:12px; opacity:0.95; font-size:18px; line-height:1.5;">${p.text}</div>`;
+      
+      const btn = document.createElement('button');
+      btn.className = 'del-btn';
+      btn.style.cssText = 'background: #ff4757; color: white; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: bold;';
+      btn.innerHTML = '<i class="ph ph-trash"></i> Delete Post';
+      btn.onclick = () => deletePost(p.userId, p.id);
+
+      div.appendChild(content);
+      div.appendChild(btn);
+      container.appendChild(div);
+    });
+  }
+
+  async function deletePost(userId, postId) {
+    if(!confirm("Eradicate this post permanently?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/community/${userId}/${postId}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-token': adminToken }
+      });
+      if(res.ok) {
+        loadDashboard(); // Refresh UI instantly
+      }
+    } catch(e) { alert('Failed to completely delete.'); }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('admin_token');
+    location.reload();
+  }
+
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').catch(err => console.log('SW registration failed: ', err));
+    });
+  }
+</script>
+
+</body>
+</html>
