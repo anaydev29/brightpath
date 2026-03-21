@@ -224,7 +224,7 @@
       else document.getElementById('registerBox').classList.add('active');
     }
 
-    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/api/auth' : 'https://your-production-backend.com/api/auth'; // CHANGE THIS BEFORE DEPLOYMENT
+    const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/api/auth' : 'https://brightpath-production.up.railway.app/api/auth'; // LIVE RAILWAY BACKEND
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();

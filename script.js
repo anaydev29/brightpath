@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             KEY_COMMUNITY='bp_community_v1',
             KEY_CHALLENGE='bp_challenge_v1';
 
-      const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : 'https://your-production-backend.com'; // CHANGE THIS BEFORE DEPLOYMENT
+      const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : 'https://brightpath-production.up.railway.app'; // LIVE RAILWAY BACKEND
 
 
       function load(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}

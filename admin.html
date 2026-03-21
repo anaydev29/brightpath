@@ -62,7 +62,7 @@
     setTimeout(loadDashboard, 800);
   });
 
-  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : 'https://your-production-backend.com'; // CHANGE THIS BEFORE DEPLOYMENT
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:5000' : 'https://brightpath-production.up.railway.app'; // LIVE RAILWAY BACKEND
 
   async function loadDashboard() {
     try {
