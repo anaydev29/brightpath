@@ -23,9 +23,12 @@ app.use(cors({
     'https://brightpathh.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'x-admin-token'],
   credentials: true
 }));
+
+// Health check route
+app.get('/', (req, res) => res.json({ status: 'ok', service: 'BrightPath API' }));
 
 // Check for MONGO_URI
 if (!process.env.MONGO_URI || process.env.MONGO_URI.includes('<username>')) {
@@ -44,4 +47,4 @@ app.use('/api/community', communityRoutes);
 
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server running on port ${PORT}`));
