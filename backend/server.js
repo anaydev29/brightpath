@@ -14,7 +14,18 @@ const app = express();
 
 // INCREASE PAYLOAD LIMIT FOR SCREENSHOT UPLOADS (Base64 is huge)
 app.use(express.json({ limit: '10mb' }));
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5000', 
+    'http://127.0.0.1:5000', 
+    'http://localhost:3000',
+    'http://127.0.0.1:5500',
+    'https://brightpathh.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+  credentials: true
+}));
 
 // Check for MONGO_URI
 if (!process.env.MONGO_URI || process.env.MONGO_URI.includes('<username>')) {
