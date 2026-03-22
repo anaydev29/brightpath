@@ -28,9 +28,20 @@
 
 ## 📸 Screenshots
 
-| Landing Page | Dashboard | Breathing Exercise |
-|:---:|:---:|:---:|
-| Glassmorphism login with animated gradient background | Mood tracker, streaks, level system & badges | Voice-guided 4-7-8 breathing with animated orb |
+### 🔐 Landing Page
+<p align="center">
+  <img src="screenshots/landing.png" width="700" alt="BrightPath Landing Page"/>
+</p>
+
+### 🏠 Dashboard
+<p align="center">
+  <img src="screenshots/dashboard.png" width="700" alt="BrightPath Dashboard"/>
+</p>
+
+### 🌬️ Breathing Exercise
+<p align="center">
+  <img src="screenshots/breathing.png" width="700" alt="BrightPath Breathing Exercise"/>
+</p>
 
 ---
 
